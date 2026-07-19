@@ -4,9 +4,9 @@ After=network.target
 
 [Service]
 Type=simple
-User=pi
-WorkingDirectory=/home/pi/sds011-sensor
-ExecStart=/home/pi/sds011-sensor/venv/bin/python /home/pi/sds011-sensor/sensor_node.py
+User=walker
+WorkingDirectory=/home/walker/sds011-sensor
+ExecStart=/home/walker/sds011-sensor/venv/bin/python /home/walker/sds011-sensor/sensor_node.py
 Restart=always
 RestartSec=5
 
