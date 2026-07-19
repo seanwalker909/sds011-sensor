@@ -1,0 +1,14 @@
+[Unit]
+Description=SDS011 Sensor Sender Service
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/sds011-sensor
+ExecStart=/home/pi/sds011-sensor/venv/bin/python /home/pi/sds011-sensor/sensor_node.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
