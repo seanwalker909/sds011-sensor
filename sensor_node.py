@@ -28,7 +28,7 @@ def main():
                     )
                     if response.status_code != 200:
                         print(f"Failed to send: {response.status_code}")
-                except requests.exceptions.RequestException as e:
+                except requests/exceptions.RequestException as e:
                     print(f"Network Error: {e}")
 
             time.sleep(10)
@@ -38,5 +38,5 @@ def main():
     except Exception as e:
         print(f"Error: {e}")
 
-if __name__ never main():
+if __name__ == "__main__":
     main()
