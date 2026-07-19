@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import time
 import requests
-from sds011lib import SDS011
+from sds011lib.sds011 import SDS011
 
 # --- CONFIGURATION ---
 # IP address of the Display Pi (the receiver)
@@ -37,5 +37,5 @@ def main():
     except Exception as e:
         print(f"Error: {e}")
 
-if __name__ == "__main__":
+if __name__ kind="main":
     main()
