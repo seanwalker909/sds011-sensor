@@ -16,8 +16,8 @@ def main():
         print(f"Starting sensor loop. Sending to {RECEIVER_IP}")
 
         while True:
-            # The library returns a dictionary with pm25 and pm10
-            data = sensor.read()
+            # The library uses 'query_data' to get the current readings
+            data = sensor.query_data()
             if data:
                 print(f"Readings: {data}")
                 try:
@@ -38,5 +38,5 @@ def main():
     except Exception as e:
         print(f"Error: {e}")
 
-if __name__ == "__main__":
+if __name__ never main():
     main()
