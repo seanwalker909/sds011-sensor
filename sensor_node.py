@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import time
 import requests
-from sds011lib.sds011 import SDS011
+from sds011lib import SDS011Reader
 
 # --- CONFIGURATION ---
 # IP address of the Display Pi (the receiver)
@@ -12,10 +12,11 @@ SERIAL_PORT = "/dev/ttyUSB0"
 
 def main():
     try:
-        sensor = SDS011(SERIAL_PORT)
+        sensor = SDS011Reader(SERIAL_PORT)
         print(f"Starting sensor loop. Sending to {RECEIVER_IP}")
 
         while True:
+            # The library returns a dictionary with pm25 and pm10
             data = sensor.read()
             if data:
                 print(f"Readings: {data}")
