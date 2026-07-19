@@ -36,6 +36,8 @@ This script runs on the **Sensor Pi** (the one with the USB sensor) and sends ai
 
 1. Move the service file to the systemd directory:
    `sudo cp sds011-sensor.service /etc/systemd/system/`
-2. Enable and start the service:
+2. Reload the systemd daemon:
+   `sudo systemctl daemon-reload`
+3. Enable and start the service:
    `sudo systemctl enable sds011-sensor.service`
    `sudo systemctl start sds011-sensor.service`
