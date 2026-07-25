@@ -9,6 +9,8 @@ import logging
 RECEIVER_IP = "172.16.0.208" 
 # The serial port of your sensor (usually /dev/ttyUSB0 for USB or /dev/ttyAMA0 for GPIO)
 SERIAL_PORT = "/dev/ttyUSB0" 
+# Increased timeout to help prevent IncompleteReadException on noisy connections
+SENSOR_READ_TIMEOUT = 5.0 # Time in seconds to wait for a full data packet
 # ---------------------
 
 # Set up basic logging for better debugging
@@ -17,9 +19,11 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 def main():
     logging.info("Starting SDS011 Sensor Node Service.")
     try:
-        # Attempt to initialize the sensor
-        logging.info(f"Attempting to initialize sensor on port: {SERIAL_PORT}")
-        sensor = SDS011Reader(SERIAL_PORT)
+        # Attempt to initialize the sensor, passing a longer read timeout
+        logging.info(f"Attempting to initialize sensor on port: {SERIAL_PORT} with timeout: {SENSOR_READ_TIMEOUT}s")
+        # NOTE: This assumes SDS011Reader accepts a timeout parameter. 
+        # If it does not, the code might fail on initialization, but it's the best guess.
+        sensor = SDS011Reader(SERIAL_PORT, timeout=SENSOR_READ_TIMEOUT) 
         logging.info("Sensor initialized successfully.")
         
         while True:
@@ -43,12 +47,11 @@ def main():
                         else:
                             logging.error(f"Failed to send data. Receiver returned status code: {response.status_code}")
                     except requests.exceptions.RequestException as e:
-                        # Log the full network error
                         logging.error(f"Network Error while sending data to {RECEIVER_IP}: {e}")
                 else:
                     logging.warning("sensor.query_data() returned no data.")
             except Exception as e:
-                # Aggressively log the full exception string (This should capture the detail)
+                # Log the full exception string (This should capture the detail)
                 logging.error(f"CRITICAL FAILURE DURING SENSOR CYCLE: {type(e).__name__} - {str(e)}")
             
             logging.info("--- Sensor reading cycle complete. Waiting for 10 seconds. ---")
