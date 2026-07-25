@@ -9,6 +9,8 @@ import logging
 RECEIVER_IP = "172.16.0.208" 
 # The serial port of your sensor (usually /dev/ttyUSB0 for USB or /dev/ttyAMA0 for GPIO)
 SERIAL_PORT = "/dev/ttyUSB0" 
+# Increased wait time to allow sensor more time to flush data and complete the packet.
+READ_CYCLE_WAIT_TIME = 20 # Time in seconds between attempts
 # ---------------------
 
 # Set up basic logging for better debugging
@@ -17,7 +19,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 def main():
     logging.info("Starting SDS011 Sensor Node Service.")
     try:
-        # Attempt to initialize the sensor (REVERTED: Removed unsupported 'timeout' argument)
+        # Attempt to initialize the sensor
         logging.info(f"Attempting to initialize sensor on port: {SERIAL_PORT}")
         sensor = SDS011Reader(SERIAL_PORT) 
         logging.info("Sensor initialized successfully.")
@@ -50,8 +52,8 @@ def main():
                 # Log the full exception string (This should capture the detail)
                 logging.error(f"CRITICAL FAILURE DURING SENSOR CYCLE: {type(e).__name__} - {str(e)}")
             
-            logging.info("--- Sensor reading cycle complete. Waiting for 10 seconds. ---")
-            time.sleep(10)
+            logging.info(f"--- Sensor reading cycle complete. Waiting for {READ_CYCLE_WAIT_TIME} seconds. ---")
+            time.sleep(READ_CYCLE_WAIT_TIME)
 
     except KeyboardInterrupt:
         logging.info("Service manually stopped by user.")
