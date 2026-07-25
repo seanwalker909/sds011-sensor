@@ -43,12 +43,13 @@ def main():
                         else:
                             logging.error(f"Failed to send data. Receiver returned status code: {response.status_code}")
                     except requests.exceptions.RequestException as e:
+                        # Log the full network error
                         logging.error(f"Network Error while sending data to {RECEIVER_IP}: {e}")
                 else:
                     logging.warning("sensor.query_data() returned no data.")
             except Exception as e:
-                # This catches errors during reading or sending
-                logging.error(f"Critical error during sensor cycle: {e}")
+                # Log the full exception message (THE CRITICAL STEP)
+                logging.error(f"Critical error during sensor cycle: {e}") # <-- This line is the key change
             
             logging.info("--- Sensor reading cycle complete. Waiting for 10 seconds. ---")
             time.sleep(10)
@@ -56,6 +57,7 @@ def main():
     except KeyboardInterrupt:
         logging.info("Service manually stopped by user.")
     except Exception as e:
+        # Log the full initialization error
         logging.critical(f"FATAL: An unrecoverable error occurred during sensor initialization: {e}")
 
 if __name__ == "__main__":
