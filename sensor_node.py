@@ -48,8 +48,8 @@ def main():
                 else:
                     logging.warning("sensor.query_data() returned no data.")
             except Exception as e:
-                # Log the full exception message (THE CRITICAL STEP)
-                logging.error(f"Critical error during sensor cycle: {e}") # <-- This line is the key change
+                # Aggressively log the full exception string (This should capture the detail)
+                logging.error(f"CRITICAL FAILURE DURING SENSOR CYCLE: {type(e).__name__} - {str(e)}")
             
             logging.info("--- Sensor reading cycle complete. Waiting for 10 seconds. ---")
             time.sleep(10)
@@ -58,7 +58,7 @@ def main():
         logging.info("Service manually stopped by user.")
     except Exception as e:
         # Log the full initialization error
-        logging.critical(f"FATAL: An unrecoverable error occurred during sensor initialization: {e}")
+        logging.critical(f"FATAL: An unrecoverable error occurred during sensor initialization: {type(e).__name__} - {str(e)}")
 
 if __name__ == "__main__":
     main()
