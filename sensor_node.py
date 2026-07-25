@@ -28,10 +28,10 @@ def main():
             logging.info("--- Starting new sensor reading cycle ---")
             try:
                 # Attempt to read data
-                data = sensor.query_data()
+                data = sensor.query()
                 if data:
                     logging.info(f"Successfully read data: {data}")
-                    
+
                     # Attempt to send data to the receiver
                     logging.info(f"Attempting to send data to receiver at {RECEIVER_IP}:5000")
                     try:
@@ -49,16 +49,20 @@ def main():
                 else:
                     logging.warning("sensor.query_data() returned no data.")
             except Exception as e:
-                # Log the full exception string (This should capture the detail)
                 logging.error(f"CRITICAL FAILURE DURING SENSOR CYCLE: {type(e).__name__} - {str(e)}")
             
-            logging.info(f"--- Sensor reading cycle complete. Waiting for {READ_CYCLE_WAIT_TIME} seconds. ---")
-            time.sleep(READ_CYCLE_WAIT_TIME)
+            # --- THE NEW SLEEP/WAKE LOGIC IS HERE ---
+            logging.info(f"--- Sensor reading cycle complete. Putting device to sleep for {READ_CYCLE_WAIT_TIME} seconds. ---")
+            try:
+                sensor.sleep()
+                time.sleep(READ_CYCLE_WAIT_TIME - 1) # Wait most of the time in sleep
+                sensor.wake()
+            except Exception as e:
+                logging.error(f"Error during sleep/wake cycle: {e}")
 
     except KeyboardInterrupt:
         logging.info("Service manually stopped by user.")
     except Exception as e:
-        # Log the full initialization error
         logging.critical(f"FATAL: An unrecoverable error occurred during sensor initialization: {type(e).__name__} - {str(e)}")
 
 if __name__ == "__main__":
